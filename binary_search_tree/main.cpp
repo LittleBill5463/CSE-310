@@ -35,61 +35,69 @@ Node* insert(Node *root, int val)
     return root;
 }
 
-Node* search(Node *root, int val) 
+bool search(Node *root, vector<int>& result, int val) 
 {
     if (root == NULL || root->val == val) 
     {
-        return root;
+        return false;
     }
 
     if (val < root->val) 
     {
-        return search(root->left, val);
+        result.push_back(root->val);
+        return search(root->left, result, val);
     } 
 
-    else 
+    else if (val > root->val)
     {
-        return search(root->right, val);
+        result.push_back(root->val);
+        return search(root->right, result, val);
+    }
+
+    else
+    {
+        result.push_back(root->val);
+        return true;
     }
 }
 
-void inorder(Node *root) 
+void inorder(Node *root, vector<int>& result) 
 {
     if (root == NULL)
         return;
 
     inorder(root->left);
-    cout << root->val << " ";
+    result.push_back(root->val);
     inorder(root->right);
 }
 
-void preorder(Node *root) 
+void preorder(Node *root,vector<int>& result) 
 {
     if (root == NULL)
         return;
 
-    cout << root->val << " ";
+    result.push_back(root->val);
     preorder(root->left);
     preorder(root->right);
 }
 
-void postorder(Node *root) 
+void postorder(Node *root, vector<int>& result) 
 {
     if (root == NULL)
         return;
 
     postorder(root->left);
     postorder(root->right);
-    cout << root->val << " ";
+    result.push_back(root->val);
 }
 
-void levelorder (Node *root, int curr, int level) 
+void levelorder (Node *root, vector<int>& result, int curr, int level) 
 {
     if (root == NULL)
         return;
 
     if (curr == level)
-        cout << root->val << " ";
+        result.push_back(root->val);
 
     levelorder (root->left, curr + 1, level);
     levelorder (root->right, curr + 1, level);
@@ -156,6 +164,7 @@ int main()
     int number_of_queries;
     cin >> number_of_queries;
     Node *root = NULL;
+    vector<int> result;
 
     while (number_of_queries--) 
     {
@@ -168,7 +177,7 @@ int main()
             cin >> value;
             root = insert(root, value);
         } 
-        
+            
         else if (command == "DELETE") 
         {
             int value;
@@ -180,43 +189,63 @@ int main()
         {
             int value;
             cin >> value;
-            if (search(root, value) == NULL) 
-            {
-                cout << "False" << endl;
-            } 
+            result.clear();
             
-            else 
+            if(search(root, result, value))
             {
-                cout << "True" << endl;
+                result.push_back(-1);
             }
+            else
+            {
+                result.push_back(-2);
+            }
+            
         } 
         
         else if (command == "INORDER") 
         {
-            inorder(root);
-            cout << endl;
+            result.clear();
+            inorder(root, result);
         } 
         
         else if (command == "PREORDER") 
         {
-            preorder(root);
-            cout << endl;
+            result.clear();
+            preorder(root, result);
         } 
         
         else if (command == "POSTORDER") 
         {
-            postorder(root);
-            cout << endl;
+            result.clear();
+            postorder(root, result);
         } 
         
         else if (command == "LEVELORDER") 
         {
             int level;
             cin >> level;
-            levelorder(root, 0, level);
-            cout << endl;
+            result.clear();
+            levelorder(root, result, 0, level);
         }
     }
+    
+    for (int val : result) 
+    {
+        if (val == -1)
+        {
+            cout << "True" << endl;
+        }
 
+        else if (val == -2)
+        {
+            cout << "False" << endl;
+        }
+
+        else 
+        {
+            cout << val << " ";
+        }
+    }
+    
     return 0;
 }
