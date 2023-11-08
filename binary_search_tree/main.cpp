@@ -66,9 +66,9 @@ void inorder(Node *root, vector<int>& result)
     if (root == NULL)
         return;
 
-    inorder(root->left);
+    inorder(root->left, result);
     result.push_back(root->val);
-    inorder(root->right);
+    inorder(root->right, result);
 }
 
 void preorder(Node *root,vector<int>& result) 
@@ -77,8 +77,8 @@ void preorder(Node *root,vector<int>& result)
         return;
 
     result.push_back(root->val);
-    preorder(root->left);
-    preorder(root->right);
+    preorder(root->left, result);
+    preorder(root->right, result);
 }
 
 void postorder(Node *root, vector<int>& result) 
@@ -86,8 +86,8 @@ void postorder(Node *root, vector<int>& result)
     if (root == NULL)
         return;
 
-    postorder(root->left);
-    postorder(root->right);
+    postorder(root->left, result);
+    postorder(root->right, result);
     result.push_back(root->val);
 }
 
@@ -99,8 +99,8 @@ void levelorder (Node *root, vector<int>& result, int curr, int level)
     if (curr == level)
         result.push_back(root->val);
 
-    levelorder (root->left, curr + 1, level);
-    levelorder (root->right, curr + 1, level);
+    levelorder (root->left, result, curr + 1, level);
+    levelorder (root->right, result, curr + 1, level);
 }
 
 Node* findMin(Node* node) 
@@ -165,7 +165,7 @@ int main()
     cin >> number_of_queries;
     Node *root = NULL;
     vector<int> result;
-
+    
     while (number_of_queries--) 
     {
         string command;
@@ -206,18 +206,21 @@ int main()
         {
             result.clear();
             inorder(root, result);
+            
         } 
         
         else if (command == "PREORDER") 
         {
             result.clear();
             preorder(root, result);
+            
         } 
         
         else if (command == "POSTORDER") 
         {
             result.clear();
             postorder(root, result);
+            
         } 
         
         else if (command == "LEVELORDER") 
@@ -226,6 +229,7 @@ int main()
             cin >> level;
             result.clear();
             levelorder(root, result, 0, level);
+            
         }
     }
     
