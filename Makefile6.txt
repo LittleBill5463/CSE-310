@@ -1,0 +1,17 @@
+dijkstra: main.o utility.o minheap.o graph.o
+	gcc -Wall -o dijkstra main.o utility.o minheap.o graph.o
+
+main.o: main.c utility.h minheap.h graph.h
+	gcc -Wall -c main.c
+
+utility.o: utility.c utility.h
+	gcc -Wall -c utility.c
+
+minheap.o: minheap.c minheap.h
+	gcc -Wall -c minheap.c
+
+graph.o: graph.c graph.h minheap.h
+	gcc -Wall -c graph.c
+
+clean:
+	rm *.o dijkstra
