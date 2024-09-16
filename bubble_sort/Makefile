@@ -5,4 +5,4 @@ main.o :main.cpp
 	g++ -Wall -c main.cpp
 
 clean :
-	rm *.o PJ1
+	rm -f *.o PJ1
