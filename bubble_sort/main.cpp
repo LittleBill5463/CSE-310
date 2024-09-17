@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-void bubbleSort(int arr[], int size) 
+int* bubbleSort(int arr[], int size) 
 {
     for (int index = 0; index < size; index++) 
     {
@@ -15,9 +15,10 @@ void bubbleSort(int arr[], int size)
             }
         }
     }
+    return arr;
 }
 
-void print_arr(int arr[], int size)
+void print_array(int arr[], int size)
 {
     for (int index = 0; index < size; index++) 
         cout << arr[index] << " "; 
@@ -35,9 +36,9 @@ int main() {
         cin >> arr[index]; 
     }
 
-    bubbleSort(arr, size);
+    int* ans = bubbleSort(arr, size);
 
-    print_arr(arr, size); 
+    print_array(ans, size); 
 
     delete[] arr; 
 
