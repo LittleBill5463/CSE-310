@@ -1,17 +1,14 @@
 #include <iostream>
-
 using namespace std;
 
-// Bubble Sort Algorithm
 void bubbleSort(int arr[], int size) 
 {
-    for (int index = 0; index < size; index++) // Iterating array user created in main,
+    for (int index = 0; index < size; index++) 
     {
         for (int j = 0; j < size - 1; j++) 
         {
-            if (arr[j] > arr[j + 1]) // if index at arr[j] is greater than next index,
+            if (arr[j] > arr[j + 1]) 
             {
-                // Swap arr[j] and arr[j + 1]
                 int temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
@@ -20,33 +17,29 @@ void bubbleSort(int arr[], int size)
     }
 }
 
-// Printing Sorted Array
 void print_arr(int arr[], int size)
 {
-    for (int index = 0; index < size; index++) // Look at every index of array, 
-        cout << arr[index] << " "; // then print array indexes followed by a space
+    for (int index = 0; index < size; index++) 
+        cout << arr[index] << " "; 
     cout << endl;
 }
 
-// Main Code
 int main() {
-    int size; // Creating int to hold user input for array size
-    cin >> size; // User input
+    int size; 
+    cin >> size; 
 
-    // Creating array with user inputs for size (size of array), and the indexes of the array
-    int* arr = new int[size]; // allocate dynamic array
+    int* arr = new int[size]; 
 
-    for (int index = 0; index < size; index++)  // iterate array
+    for (int index = 0; index < size; index++)  
     {
-        cin >> arr[index]; // input for every index of array of size 'size'
+        cin >> arr[index]; 
     }
 
-    // Call Bubble Sort to sort using algorithm
     bubbleSort(arr, size);
 
-    print_arr(arr, size); // prints finished array
+    print_arr(arr, size); 
 
-    delete[] arr; // deallocate dynamic array
+    delete[] arr; 
 
     return 0;
 }
