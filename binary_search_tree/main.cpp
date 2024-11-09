@@ -1,255 +1,213 @@
-#include <bits/stdc++.h>
-
+#include <iostream>
+#include <queue>
 using namespace std;
 
 struct Node 
 {
-    int val;
-    struct Node *left, *right;
+    int data;
+    Node* left;
+    Node* right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
 };
 
-Node* create(int val) 
+class BST 
 {
-    Node *temp = new Node;
-    temp->val = val;
-    temp->left = temp->right = NULL;
-    return temp;
-}
+public:
+    BST() : root(nullptr) {}
 
-Node* insert(Node *root, int val) 
-{
-    if (root == NULL) 
+    void insert(int val) 
     {
-        return create(val);
+        root = insertRec(root, val);
     }
 
-    if (val < root->val) 
+    void deleteNode(int val) 
     {
-        root->left = insert(root->left, val);
-    } 
-
-    else 
-    {
-        root->right = insert(root->right, val);
-    }
-    return root;
-}
-
-bool search(Node *root, vector<int>& result, int val) 
-{
-    if (root == NULL || root->val == val) 
-    {
-        return false;
+        root = deleteRec(root, val);
     }
 
-    if (val < root->val) 
+    bool search(int val) 
     {
-        result.push_back(root->val);
-        return search(root->left, result, val);
-    } 
-
-    else if (val > root->val)
-    {
-        result.push_back(root->val);
-        return search(root->right, result, val);
+        return searchRec(root, val);
     }
 
-    else
+    void inorder() 
     {
-        result.push_back(root->val);
-        return true;
-    }
-}
-
-void inorder(Node *root, vector<int>& result) 
-{
-    if (root == NULL)
-        return;
-
-    inorder(root->left, result);
-    result.push_back(root->val);
-    inorder(root->right, result);
-}
-
-void preorder(Node *root,vector<int>& result) 
-{
-    if (root == NULL)
-        return;
-
-    result.push_back(root->val);
-    preorder(root->left, result);
-    preorder(root->right, result);
-}
-
-void postorder(Node *root, vector<int>& result) 
-{
-    if (root == NULL)
-        return;
-
-    postorder(root->left, result);
-    postorder(root->right, result);
-    result.push_back(root->val);
-}
-
-void levelorder (Node *root, vector<int>& result, int curr, int level) 
-{
-    if (root == NULL)
-        return;
-
-    if (curr == level)
-        result.push_back(root->val);
-
-    levelorder (root->left, result, curr + 1, level);
-    levelorder (root->right, result, curr + 1, level);
-}
-
-Node* findMin(Node* node) 
-{
-    while (node->left != nullptr) 
-    {
-        node = node->left;
-    }
-
-    return node;
-}
-
-Node* deleteNode(Node *root, int key) 
-{
-    if (root == nullptr) 
-    {
-        return root;
-    }
-
-    if (key < root->val) 
-    {
-        root->left = deleteNode(root->left, key);
-    }
-    
-    else if (key > root->val) 
-    {
-        root->right = deleteNode(root->right, key);
-    } 
-    
-    else 
-    {
-        if (root->left == nullptr && root->right == nullptr)
+        if (!root) 
         {
-            delete root;
-            return nullptr;
+            cout << endl << endl;
+            return;
         }
-
-        else if (root->left == nullptr) 
-        {
-            Node* temp = root->right;
-            delete root;
-            return temp;
-        } 
-        
-        else if (root->right == nullptr) 
-        {
-            Node* temp = root->left;
-            delete root;
-            return temp;
-        }
-
-        Node* temp = findMin(root->right);
-        root->val = temp->val;
-        root->right = deleteNode(root->right, temp->val);
+        inorderRec(root);
+        cout << endl;
     }
-    return root;
-}
+
+    void preorder() 
+    {
+        if (!root) 
+        {
+            cout << endl << endl;
+            return;
+        }
+        preorderRec(root);
+        cout << endl;
+    }
+
+    void postorder() 
+    {
+        if (!root) 
+        {
+            cout << endl << endl;
+            return;
+        }
+        postorderRec(root);
+        cout << endl;
+    }
+
+    void levelOrder() 
+    {
+        if (!root) 
+        {
+            cout << endl << endl;
+            return;
+        }
+        queue<Node*> q;
+        q.push(root);
+        while (!q.empty()) 
+        {
+            Node* node = q.front();
+            q.pop();
+            cout << node->data << " ";
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+        }
+        cout << endl;
+    }
+
+private:
+    Node* root;
+
+    Node* insertRec(Node* node, int val) 
+    {
+        if (!node) return new Node(val);
+        if (val < node->data)
+            node->left = insertRec(node->left, val);
+        else if (val > node->data)
+            node->right = insertRec(node->right, val);
+        return node;
+    }
+
+    Node* deleteRec(Node* node, int val) 
+    {
+        if (!node) return node;
+        if (val < node->data)
+            node->left = deleteRec(node->left, val);
+        else if (val > node->data)
+            node->right = deleteRec(node->right, val);
+        else 
+        {
+            if (!node->left) 
+            {
+                Node* temp = node->right;
+                delete node;
+                return temp;
+            } 
+            else if (!node->right) 
+            {
+                Node* temp = node->left;
+                delete node;
+                return temp;
+            }
+            Node* temp = minValueNode(node->right);
+            node->data = temp->data;
+            node->right = deleteRec(node->right, temp->data);
+        }
+        return node;
+    }
+
+    Node* minValueNode(Node* node) 
+    {
+        Node* current = node;
+        while (current && current->left)
+            current = current->left;
+        return current;
+    }
+
+    bool searchRec(Node* node, int val) 
+    {
+        if (!node) return false;
+        if (node->data == val) return true;
+        if (val < node->data) return searchRec(node->left, val);
+        return searchRec(node->right, val);
+    }
+
+    void inorderRec(Node* node) 
+    {
+        if (!node) return;
+        inorderRec(node->left);
+        cout << node->data << " ";
+        inorderRec(node->right);
+    }
+
+    void preorderRec(Node* node) 
+    {
+        if (!node) return;
+        cout << node->data << " ";
+        preorderRec(node->left);
+        preorderRec(node->right);
+    }
+
+    void postorderRec(Node* node) 
+    {
+        if (!node) return;
+        postorderRec(node->left);
+        postorderRec(node->right);
+        cout << node->data << " ";
+    }
+};
 
 int main() 
 {
+    BST tree;
     int number_of_queries;
     cin >> number_of_queries;
-    Node *root = NULL;
-    vector<int> result;
-    
     while (number_of_queries--) 
     {
         string command;
         cin >> command;
-
         if (command == "INSERT") 
         {
             int value;
             cin >> value;
-            root = insert(root, value);
+            tree.insert(value);
         } 
-            
         else if (command == "DELETE") 
         {
             int value;
             cin >> value;
-            root = deleteNode(root, value);
+            tree.deleteNode(value);
         } 
-        
         else if (command == "SEARCH") 
         {
             int value;
             cin >> value;
-            result.clear();
-            
-            if(search(root, result, value))
-            {
-                result.push_back(-1);
-            }
-            else
-            {
-                result.push_back(-2);
-            }
-            
+            cout << (tree.search(value) ? "True" : "False") << endl;
         } 
-        
         else if (command == "INORDER") 
         {
-            result.clear();
-            inorder(root, result);
-            
+            tree.inorder();
         } 
-        
         else if (command == "PREORDER") 
         {
-            result.clear();
-            preorder(root, result);
-            
+            tree.preorder();
         } 
-        
         else if (command == "POSTORDER") 
         {
-            result.clear();
-            postorder(root, result);
-            
+            tree.postorder();
         } 
-        
         else if (command == "LEVELORDER") 
         {
-            int level;
-            cin >> level;
-            result.clear();
-            levelorder(root, result, 0, level);
-            
+            tree.levelOrder();
         }
     }
-    
-    for (int val : result) 
-    {
-        if (val == -1)
-        {
-            cout << "True" << endl;
-        }
-
-        else if (val == -2)
-        {
-            cout << "False" << endl;
-        }
-
-        else 
-        {
-            cout << val << " ";
-        }
-    }
-    
     return 0;
 }
