@@ -1,8 +1,10 @@
-MAIN :main.o
-	g++ -Wall -o MAIN main.o
+all: main
 
-main.o :main.cpp
-	g++ -Wall -c main.cpp
+main: main.o
+	g++ -o main main.o
 
-clean :
-	rm *.o MAIN
+main.o: main.cpp
+	g++ -c main.cpp
+
+clean:
+	rm -f *.o main
